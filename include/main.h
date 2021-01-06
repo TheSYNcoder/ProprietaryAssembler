@@ -6,6 +6,7 @@
 /*
 Necessary structs defined here
 */
+#define ASSEMBLY_FILE_EXTENSION ".as"
 
 typedef struct op_tab_node{
 
@@ -16,6 +17,15 @@ typedef struct op_tab_node{
     char add_mode[20]; /* the addressing mode - relative, absolute etc */
 
 }op_tab_node;
+
+
+/*parser uses this node and returns an array of Tokens*/
+typedef struct Token
+{
+    /* data */
+    int32_t type; /*type of the token*/
+    char* word;/*contains the actual word*/
+}Token;
 
 
 #endif
