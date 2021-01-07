@@ -14,6 +14,7 @@ struct Trie *getNewTrieNode()
 }
 int indexTrie(char ch)
 {
+    //returns index of a character in the character array in trie
     if (ch >= 65 && ch <= 90)
     {
         return (ch - 65);
@@ -57,6 +58,7 @@ int indexTrie(char ch)
 }
 void insert(struct Trie *head, char *str, op_tab_node *n)
 {
+    //basic trie insert
     struct Trie *curr = head;
     while (*str)
     {
@@ -73,6 +75,7 @@ void insert(struct Trie *head, char *str, op_tab_node *n)
 
 op_tab_node *search(struct Trie *head, char *str)
 {
+    //basic trie search
     if (head == NULL)
         return 0;
 
@@ -98,48 +101,49 @@ struct Trie *makeTrie(int col, char *filename)
     int i = 0;
     while (fgets(line, 100, file))
     {
+        //parses csv line by line
         int j = 0;
         const char *tok;
         op_tab_node* new_node = (op_tab_node*)malloc(sizeof(op_tab_node));
         new_node->sl_no = i;
         char *tmp = strdup(line);
-        tok = strtok(line, ",");
+        tok = strtok(line, ",");// tok is the first token
         while (tok != NULL)
         {
             if (j == 0)
-            {
+            {//first column element
                 strcpy(new_node->symbol, tok);
             }
             else if (j == 1)
-            {
+            {//second column element
                 strcpy(new_node->opcode, tok);
             }
             else if (j == 2)
-            {
+            {//third column element
                 strcpy(new_node->add_mode, tok);
             }
             else if (j == 3)
-            {
+            {//fourth column element
                 new_node->length = tok[0] - 48;
             }
-            else if (j == 4)
-            {
+            else if (j == col)
+            {//breaks because no more columns 
                 break;
             }
-            tok = strtok(NULL, ",");
+            tok = strtok(NULL, ",");//updates tok to the next token
             j++;
         }
-        char key[30] = "";
+        char key[30] = "";//creates a key which is opcode+addressing mode
         strcat(key, new_node->opcode);
         strcat(key, new_node->add_mode);
         //printf("%s\n", key);
-        insert(head, key, new_node);
+        insert(head, key, new_node);//inserts into trie
         //char newkey[30] = "PORT[DX]; AL"
        
         free(tmp);
         i++;
     }
-    return head;
+    return head;//returns head of the trie
 }
 
 int main(int argc, char const *argv[])
@@ -157,6 +161,8 @@ int main(int argc, char const *argv[])
 
     struct Trie* tree = makeTrie(row, col, fname);
     */
+
+   //how to use
    struct Trie* tree = makeTrie(4, "../opcodes.csv");
     op_tab_node* n = search(tree, "$C216BIT POP");
     if(n != NULL){
