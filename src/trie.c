@@ -157,5 +157,10 @@ int main(int argc, char const *argv[])
 
     struct Trie* tree = makeTrie(row, col, fname);
     */
+   struct Trie* tree = makeTrie(134, 4, "../opcodes.csv");
+    op_tab_node* n = search(tree, "$C216BIT POP");
+    if(n != NULL){
+        printf("%s %s %s %d\n", n->symbol, n->opcode, n->add_mode, n->length);
+    }
   
 }
