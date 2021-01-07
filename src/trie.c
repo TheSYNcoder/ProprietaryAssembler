@@ -89,14 +89,14 @@ op_tab_node *search(struct Trie *head, char *str)
     return curr->pointer;
 }
 
-struct Trie *makeTrie(int row, int col, char *filename)
+struct Trie *makeTrie(int col, char *filename)
 {
     //printf("hi");
     struct Trie *head = getNewTrieNode();
     FILE *file = fopen(filename, "r");
     char line[100];
     int i = 0;
-    while (fgets(line, 100, file) && (i < row))
+    while (fgets(line, 100, file))
     {
         int j = 0;
         const char *tok;
@@ -157,7 +157,7 @@ int main(int argc, char const *argv[])
 
     struct Trie* tree = makeTrie(row, col, fname);
     */
-   struct Trie* tree = makeTrie(134, 4, "../opcodes.csv");
+   struct Trie* tree = makeTrie(4, "../opcodes.csv");
     op_tab_node* n = search(tree, "$C216BIT POP");
     if(n != NULL){
         printf("%s %s %s %d\n", n->symbol, n->opcode, n->add_mode, n->length);
