@@ -12,6 +12,8 @@ struct Trie *getNewTrieNode()
     node->pointer = NULL;
     return node;
 }
+
+
 int indexTrie(char ch)
 {
     if (ch >= 65 && ch <= 90)
@@ -71,28 +73,12 @@ void insert(struct Trie *head, char *str, op_tab_node *n)
     curr->pointer = n;
 }
 
-op_tab_node *search(struct Trie *head, char *str)
-{
-    if (head == NULL)
-        return 0;
 
-    struct Trie *curr = head;
-    while (*str)
-    {
-        curr = curr->character[indexTrie(*str)];
-        if (curr == NULL)
-            return NULL;
-
-        str++;
-    }
-
-    return curr->pointer;
-}
 
 struct Trie *makeTrie(int row, int col, char *filename)
 {
-    //printf("hi");
-    struct Trie *head = getNewTrieNode();
+    
+    head = getNewTrieNode();
     FILE *file = fopen(filename, "r");
     char line[100];
     int i = 0;
@@ -142,6 +128,9 @@ struct Trie *makeTrie(int row, int col, char *filename)
     return head;
 }
 
+
+
+
 int main(int argc, char const *argv[])
 {
     //struct Trie *tree = makeTrie(134, 4, "input3");
@@ -164,3 +153,5 @@ int main(int argc, char const *argv[])
     }
   
 }
+
+
