@@ -399,19 +399,56 @@ void validate_and_find(Line *line)
 
     if (!(strcmp(tokens[start_token], "DB") && strcmp(tokens[start_token], "DW") && strcmp(tokens[start_token], "DQ")))
     {
-        fprintf(fp, "%s", tokens[start_token]);
-        int len = 4 - strlen(tokens[start_token + 1]);
+        if (tokens[start_token + 1][0] == '"')
+        {
+            int ptr = 1;
+            while (tokens[start_token + 1][ptr] != '"')
+            {
+                int val = tokens[start_token + 1][ptr];
 
-        for (i = 0; i < len; i++)
-            fprintf(fp, "%s", "0");
-        fprintf(fp, "%s\n", tokens[start_token + 1]);
-        // temp = symtable_function(identifier, 1);
-        char *identifier = malloc(sizeof(char) * strlen(tokens[0]));
-        for (i = 0; i < strlen(tokens[0]) - 1; i++)
-            identifier[i] = tokens[0][i];
-        identifier[strlen(tokens[0]) - 1] = '\0';
-        identifier = upper_token(identifier);
-        temp = symtable_function(identifier, 1);
+                long int remainder, quotient;
+                int i = 1, j, temp;
+                char hexadecimalNumber[100];
+
+                quotient = val;
+                // printf("%d\n", val);
+                while (quotient != 0)
+                {
+                    temp = quotient % 16;
+                    //To convert integer into character
+                    if (temp < 10)
+                        temp = temp + 48;
+                    else
+                        temp = temp + 55;
+                    hexadecimalNumber[i++] = temp;
+                    quotient = quotient / 16;
+                }
+                fprintf(fp, "%s", tokens[start_token]);
+                for (j = i - 1; j < 4; j++)
+                    fprintf(fp, "%c", '0');
+                for (j = i - 1; j > 0; j--)
+                    fprintf(fp, "%c", hexadecimalNumber[j]);
+                fprintf(fp, "\n");
+                // fprintf(fp, "%s%04d\n", tokens[start_token], val);
+                ptr++;
+            }
+        }
+        else
+        {
+            fprintf(fp, "%s", tokens[start_token]);
+            int len = 4 - strlen(tokens[start_token + 1]);
+
+            for (i = 0; i < len; i++)
+                fprintf(fp, "%s", "0");
+            fprintf(fp, "%s\n", tokens[start_token + 1]);
+            // temp = symtable_function(identifier, 1);
+        }
+            char *identifier = malloc(sizeof(char) * strlen(tokens[0]));
+            for (i = 0; i < strlen(tokens[0]) - 1; i++)
+                identifier[i] = tokens[0][i];
+            identifier[strlen(tokens[0]) - 1] = '\0';
+            identifier = upper_token(identifier);
+            temp = symtable_function(identifier, 1);
 
         if (strcmp(tokens[start_token], "DB") == 0)
         {
