@@ -76,6 +76,14 @@ void add_and_reset_lines(Token* temp, Line* line)
 void parse(char* fileName)
 {
     checkValidFileName(fileName);
+    FILE *fp;
+    fp = fopen(INTERMEDIATE_FILE, "w");
+    if (!fp)
+    {
+        perror("open");
+        exit(0);
+    }
+    fclose(fp);
 
     FILE* fptr = fopen(fileName, "r");
     char buffer;

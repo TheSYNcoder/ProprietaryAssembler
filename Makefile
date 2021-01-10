@@ -45,3 +45,6 @@ clean:
 	rm -rf $(ODIR)
 	rm pasm
 	# rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+
+test: clean pasm
+	./pasm file.pasm

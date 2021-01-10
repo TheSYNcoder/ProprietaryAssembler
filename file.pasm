@@ -1,6 +1,6 @@
-string: DB 100
 MOV DX string
 MOV AH 09H
 INT 21H
 MOV AH 4CH
 INT 21H
+string: DB 10

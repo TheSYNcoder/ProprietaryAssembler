@@ -36,8 +36,6 @@ int current_lc;
 sym_tab_node symbol_table[1000];
 int num_symbols;
 
-
-
-
+#define INTERMEDIATE_FILE "interm.lst"
 
 #endif
