@@ -82,7 +82,7 @@ second_pass_token make_token(char *str) {
 		t.value = atoi(substr(str, 1, strlen(str)));
 	} else if (begins_with(str, 'S')) {
 		t.type = S;
-		int val = hex_to_dec(substr(str, 1, strlen(str)));
+		int val = hex_to_dec(substr(str, 1, strlen(str))); // ? query about value following S, is it a decimal or hex value 
 		if(val < 0 || val > 99) {
 			fprintf(stderr, "Symbol value range [00 - 99]\n");
 			exit(EXIT_FAILURE);
@@ -120,8 +120,4 @@ second_pass_token make_token(char *str) {
  * args : const char *filename
  * returns: line (all tokens for the file, not line wise)
  */
-line parse_intermeditate_file(const char *filename)
-{
-	line res;
-	return res;
-}
+line parse_intermediate_file(const char *filename);

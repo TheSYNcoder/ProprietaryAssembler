@@ -1,16 +1,11 @@
 #include "./second_pass_parse.h"
 
-int main(int argc, char **argv) {
-    char *filename; FILE *fp;
+line parse_intermediate_file(const char *filename) {
+    FILE *fp;
+
     char *rest = NULL; char *token = NULL;
 
     second_pass_token *tokens = NULL; int num_tokens = 0;
-
-    if (!argv[1]) {
-        fprintf(stderr, "Usage: ./a.out filename: (char *)\n");
-        exit(EXIT_FAILURE);
-    } else
-        filename = argv[1];
 
     if((fp = fopen(filename, "r")) == NULL) {
         fprintf(stderr, "Error while opening file.\n");
@@ -20,12 +15,12 @@ int main(int argc, char **argv) {
     size_t buf_size = 80;
     char *buffer = malloc(buf_size * sizeof(char));
 
+    num_tokens = 0;
+
+    tokens = malloc(num_tokens * sizeof(second_pass_token));
+
     while(getline(&buffer, &buf_size, fp) != -1) {
         rest = buffer;
-
-        num_tokens = 0;
-
-        tokens = malloc(num_tokens * sizeof(second_pass_token));
 
         while(token = strtok_r(rest, " ", &rest)) {
 			void *temp = NULL;
@@ -44,17 +39,35 @@ int main(int argc, char **argv) {
             tokens[num_tokens - 1] = t;
 		}
 
-        line line;
-        line.len = num_tokens;
-        line.tokens = malloc(line.len * sizeof(second_pass_token));
-        for(int i = 0; i < line.len; i++) {
-            line.tokens[i] = tokens[i];
-        }
-
-        print_line(line);
-
-        free(tokens);
         free(token);
-        free(line.tokens);
     }
+
+    line line;
+    line.len = num_tokens;
+    line.tokens = malloc(line.len * sizeof(second_pass_token));
+    for(int i = 0; i < line.len; i++) {
+        line.tokens[i] = tokens[i];
+    }
+
+    free(tokens);
+
+    return line;
+
 }
+
+// int main(int argc, char **argv) {
+//     char *filename; FILE *fp;
+//     char *rest = NULL; char *token = NULL;
+
+//     second_pass_token *tokens = NULL; int num_tokens = 0;
+
+//     if (!argv[1]) {
+//         fprintf(stderr, "Usage: ./a.out filename: (char *)\n");
+//         exit(EXIT_FAILURE);
+//     } else
+//         filename = argv[1];
+
+//     line l = parse_intermeditate_file(filename);
+//     // print_line(l);
+//     return 0;
+// }
