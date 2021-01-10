@@ -156,9 +156,21 @@ void parse(char* fileName)
                         }   
                     }
                 }
-                else if(ch == '\n' || ch == ';')
+                else if(ch == '\n')
                 {
                         add_and_reset_lines(&temp, &currentLine);
+                }
+                else if(ch == ';')
+                {
+                    /*ignore untill you get a newline*/
+                    while(fread(&ch, sizeof(char), 1, fptr))
+                    {
+                        if(ch == '\n')
+                        {
+                            fseek(fptr, -sizeof(char), SEEK_CUR);
+                            break;
+                        }
+                    }
                 }
             }
         }
