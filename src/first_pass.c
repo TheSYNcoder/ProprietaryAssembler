@@ -2,7 +2,6 @@
 #include "trie.h"
 #include "parser.h"
 
-
 int get_code_for_register(char *reg_name)
 {
 
@@ -103,31 +102,32 @@ int symtable_function(char *token, int define)
     for (pos = 0; pos < num_symbols; pos++)
         if (strcmp(token, symbol_table[pos].label) == 0)
             break;
-    
+
     if (pos == num_symbols)
     {
         sym_tab_node node;
         node.defined = 0;
-        node.label = malloc( 100 );
-        strcpy( node.label , token);
+        node.label = malloc(100);
+        strcpy(node.label, token);
         node.sl_no = num_symbols;
         symbol_table[num_symbols++] = node;
         pos = num_symbols - 1;
     }
-    
+
     if (define)
     {
-        
+
         if (!symbol_table[pos].defined)
         {
             symbol_table[pos].defined = 1;
             symbol_table[pos].LC = current_lc;
+            // printf("%s %d %d\n", symbol_table[pos].label, symbol_table[pos].LC, __LINE__);
         }
-        else{
+        else
+        {
             printf("MULTIPLE SYMBOL DEFINITON  %s \n", token);
             exit(0);
         }
-            
     }
     return 0;
 }
@@ -228,15 +228,16 @@ int check_number(char *s)
 
 char *upper_token(char *s)
 {
-    char *ret = malloc( sizeof(char)  * strlen(s));
+    char *ret = malloc(sizeof(char) * strlen(s));
     int i;
-    for ( i =0 ; i < strlen(s) ; i++ )
+    for (i = 0; i < strlen(s); i++)
         ret[i] = toupper(s[i]);
+    ret[i] = 0;
     return ret;
 }
 
 int check_reg_var_pair(char *operand, char *token)
-{   
+{
     if (strcmp("AX", operand) == 0)
     {
         return strcmp(upper_token(token), "AX") == 0;
@@ -369,7 +370,7 @@ void validate_and_find(Line *line)
     int num_tokens = line->length;
     char **tokens = malloc(num_tokens * sizeof(char *));
     int i, j, flag = 1, start_token = 0, temp, current_token = 0;
-    
+
     for (i = 0; i < num_tokens; i++)
     {
         tokens[i] = malloc((line->tokens[i].length) * sizeof(char));
@@ -394,27 +395,36 @@ void validate_and_find(Line *line)
     if (tokens[0][strlen(tokens[0]) - 1] == ':')
     {
         start_token++;
-        current_lc += 1;
     }
-
-    
 
     if (!(strcmp(tokens[start_token], "DB") && strcmp(tokens[start_token], "DW") && strcmp(tokens[start_token], "DQ")))
     {
-        
         fprintf(fp, "%s", tokens[start_token]);
-        int len = 4 - strlen(tokens[start_token+1]);
-        
+        int len = 4 - strlen(tokens[start_token + 1]);
+
         for (i = 0; i < len; i++)
             fprintf(fp, "%s", "0");
         fprintf(fp, "%s\n", tokens[start_token + 1]);
         // temp = symtable_function(identifier, 1);
         char *identifier = malloc(sizeof(char) * strlen(tokens[0]));
-        for ( i =0; i < strlen(tokens[0]) -1; i++ )
-            identifier[i] =  tokens[0][i] ;
-        identifier[strlen(tokens[0])-1] ='\0';
+        for (i = 0; i < strlen(tokens[0]) - 1; i++)
+            identifier[i] = tokens[0][i];
+        identifier[strlen(tokens[0]) - 1] = '\0';
         identifier = upper_token(identifier);
-        temp = symtable_function(identifier , 1);
+        temp = symtable_function(identifier, 1);
+
+        if (strcmp(tokens[start_token], "DB") == 0)
+        {
+            current_lc++;
+        }
+        if (strcmp(tokens[start_token], "DW") == 0)
+        {
+            current_lc += 2;
+        }
+        if (strcmp(tokens[start_token], "DQ") == 0)
+        {
+            current_lc += 4;
+        }
     }
     else
     {
@@ -467,7 +477,7 @@ void validate_and_find(Line *line)
                 break;
         }
         temp = (i < num_opcodes - 1 ? i : num_opcodes - 1);
-        
+
         if (temp != num_opcodes)
         {
 
@@ -478,27 +488,32 @@ void validate_and_find(Line *line)
                 fprintf(fp, "%c", '0');
 
             fprintf(fp, "%s ", opcodes[temp]->opcode);
-            
-            
-            
-            
 
-            for (i = start_token ; i < num_tokens; i++)
+            for (i = start_token; i < num_tokens; i++)
             {
-                
+
                 int reg_code = get_code_for_register(tokens[i]);
-                
+
                 if (reg_code == -1)
                 {
                     if (check_number(tokens[i]))
+                    {
+                        int len_l = strlen(tokens[i]);
+                        if (tokens[i][len_l - 1] == 'H')
+                        {
+                            tokens[i][--len_l] = 0;
+                        }
+                        fprintf(fp, "L");
+                        for (int pp = 0; pp < 4 - len_l; pp++)
+                            fprintf(fp, "%c", '0');
                         fprintf(fp, "%s", tokens[i]);
+                    }
                     else
                     {
-                        
+
                         temp = symtable_function(tokens[i], 0);
-                        
-                        
-                        fprintf(fp, "%s%04d", "S", num_symbols-1);
+
+                        fprintf(fp, "%s%04d", "S", num_symbols - 1);
                     }
                 }
                 else
