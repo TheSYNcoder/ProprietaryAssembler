@@ -15,6 +15,7 @@ struct Trie
 };
 
 extern struct Trie *head;
+extern struct Trie *makeTrie(int col, char *filename);
 
 #endif
 

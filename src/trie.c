@@ -94,6 +94,7 @@ op_tab_node *search(struct Trie *head, char *str)
     }
 
 
+}
 
 struct Trie *makeTrie(int col, char *filename)
 {
@@ -152,29 +153,29 @@ struct Trie *makeTrie(int col, char *filename)
 
 
 
-int main(int argc, char const *argv[])
-{
-    //struct Trie *tree = makeTrie(134, 4, "input3");
-    /*if(argc < 3){
-        printf("Please specify the CSV file as an input\n");
-        exit(0);
-    }
+// int main(int argc, char const *argv[])
+// {
+//     //struct Trie *tree = makeTrie(134, 4, "input3");
+//     /*if(argc < 3){
+//         printf("Please specify the CSV file as an input\n");
+//         exit(0);
+//     }
 
-    int row = atoi(argv[1]);
-    int col = atoi(argv[2]);
-    char fname[256];
-    strcpy(fname, argv[3]);
+//     int row = atoi(argv[1]);
+//     int col = atoi(argv[2]);
+//     char fname[256];
+//     strcpy(fname, argv[3]);
 
-    struct Trie* tree = makeTrie(row, col, fname);
-    */
+//     struct Trie* tree = makeTrie(row, col, fname);
+//     */
 
-   //how to use
-   struct Trie* tree = makeTrie(4, "../opcodes.csv");
-    op_tab_node* n = search(tree, "$C216BIT POP");
-    if(n != NULL){
-        printf("%s %s %s %d\n", n->symbol, n->opcode, n->add_mode, n->length);
-    }
+//    //how to use
+//    struct Trie* tree = makeTrie(4, "../opcodes.csv");
+//     op_tab_node* n = search(tree, "$C216BIT POP");
+//     if(n != NULL){
+//         printf("%s %s %s %d\n", n->symbol, n->opcode, n->add_mode, n->length);
+//     }
   
-}
+// }
 
 

@@ -36,17 +36,7 @@ int current_lc;
 sym_tab_node symbol_table[1000];
 int num_symbols;
 
-typedef struct Token
-{
-    int length; // how many character in the word
-    char word[10]; // actual opcode or operand
-}Token;
 
-typedef struct Line
-{
-    int length; // how many Token exists in a line
-    Token tokens[3];
-}Line;
 
 
 

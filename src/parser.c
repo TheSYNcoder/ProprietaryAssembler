@@ -2,7 +2,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include "main.h"
+#include "parser.h"
 
 
 /*check if the filename and the file extension is correct*/
@@ -50,7 +50,7 @@ int validate(char ch)
     {
         return 0;
     }
-   
+} 
 void add_and_reset_lines(Token* temp, Line* line)
 {
     line->tokens[line->length] = *temp;
@@ -60,6 +60,9 @@ void add_and_reset_lines(Token* temp, Line* line)
 
     /*call here suvyan and aritra*/
     //if(line->length > 0 && line->tokens[0].length > 0) validate_and_find(line);
+
+    if (line->length > 0 && line->tokens[0].length > 0)
+        find_and_validate(line);
 
     temp->length = 0;
     for(int k=0;k<10;k++) temp->word[k] = '\0';

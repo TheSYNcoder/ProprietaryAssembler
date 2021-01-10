@@ -1,6 +1,6 @@
 #include "main.h"
 #include "trie.h"
-#include <string.h>
+#include "parser.h"
 
 
 
@@ -95,7 +95,7 @@ int symtable_function(char *token, int define)
     }
     if(define)
     {
-    	if(!node.defined)
+    	if(!symbol_table[pos].defined)
     	{
     		symbol_table[pos].defined = 1;
         	symbol_table[pos].LC = current_lc;
@@ -303,21 +303,32 @@ int check_reg_var_pair( char * operand, char *token ){
     return 1;
 }
 
-op_tab_node* validate_and_find( char **tokens , int num_tokens ){
+void validate_and_find( Line*  line ){
 
-    struct Trie * head;
+    // char **tokens , int num_tokens
+    // 
+    // line->token[0]->word
+    int num_tokens = line->length;
+    char **tokens = malloc( num_tokens * sizeof(char *));
+    int i, j, flag = 1, start_token = 0, temp, current_token = 0;
+    for ( i = 0; i < num_tokens ; i++ ){
+        tokens[i]  = malloc( (line->tokens[i].length) * sizeof(char) );
+        tokens[i] = line->tokens[i].word;
+    }
+
     op_tab_node* node = NULL;
     if(num_tokens == 0)
-        return NULL;
+        return;
 
 
     FILE *fp;
     fp = fopen("intermediate_file.txt", "w");
-    int i, j, flag = 1, start_token = 0, temp;
+    
     char *identifier, buffer[4];
     if (tokens[0][strlen(tokens[0]) - 1] == ':')
     {
     	start_token++;
+        current_lc += 1;
     }
     if(!(strcmp(tokens[start_token], "DB") && strcmp(tokens[start_token], "DW") && strcmp(tokens[start_token], "DQ")))
     {
@@ -337,7 +348,7 @@ op_tab_node* validate_and_find( char **tokens , int num_tokens ){
 	    op_tab_node ** opcodes = search( head, opcode, &num_opcodes);
 
 	    if(opcodes == NULL || num_opcodes == 0)
-	        return NULL;
+	        return ;
 
 	    for(i = 0; i < num_opcodes ; i++)
 	    {
@@ -359,30 +370,38 @@ op_tab_node* validate_and_find( char **tokens , int num_tokens ){
 	        }
 
 	        if(num_tokens - current_token < c)
-	            return NULL;
+	            return ;
 
 	        for(j = 0; j < c; j++)
 	            if(!check_reg_var_pair(modes[j], tokens[current_token+j]))
 	                flag=0;
 
-	        if(flag)
+            current_lc += opcodes[temp]->length;
+
+            if(flag)
 	            break;
+            
 	    }
 	    temp = i;
 	    if(temp != num_opcodes)
 	    {
 	    	fprintf(fp, "O");
-	    	for(i = 0; i < 4 - strlen(opcodes[temp]); i++)
+	    	for(i = 0; i < 4 - strlen(opcodes[temp]->opcode); i++)
     			fprintf(fp, "%c", '0');
-    		fprintf(fp, "%s ", opcodes[temp]);
+    		fprintf(fp, "%s ", opcodes[temp]->opcode);
 
 	    	for(i = start_token + 1; i < num_tokens; i++)
 	    	{
 	    		int reg_code = get_code_for_register(tokens[i]);
 	    		if(reg_code == -1)
 	    		{
-	    			temp = symtable_function(tokens[i], 0);
-	    			fprintf(fp, "%s%04d", "S", num_symbols);
+                    if(!check_number(tokens[i]))
+                        fprintf(fp, "%s", tokens[i]);
+                    else
+                    {
+    	    			temp = symtable_function(tokens[i], 0);
+    	    			fprintf(fp, "%s%04d", "S", num_symbols);
+                    }
 	    		}
 	    		else
 	    		{
@@ -393,6 +412,7 @@ op_tab_node* validate_and_find( char **tokens , int num_tokens ){
 	    		else
 	    			fprintf(fp, "\n");
 	    	}
+            
 	    }
     }
     fclose(fp);

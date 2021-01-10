@@ -11,10 +11,12 @@ $(ODIR)/%.o: $(SRC)/%.c
 	mkdir -p build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-
-
+SOURCE = $(wildcard $(SRC)/*.c)
+OBJECTS=$(patsubst $(SRC)/%.c, $(ODIR)/%.o, $(SOURCE))
+$(info    OBJECTS is $(OBJECTS))
 # shell: $(OBJECTS)
-pasm : $(ODIR)/main.o
+# pasm : $(ODIR)/%.o
+pasm : $(OBJECTS) 
 	$(CC) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
