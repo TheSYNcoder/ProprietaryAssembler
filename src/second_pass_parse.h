@@ -26,7 +26,7 @@ typedef struct l {
 
 void print_line(line line) {
 	for(int i = 0; i < line.len; i++) {
-		printf("%d %d\n", line.tokens[i].type, line.tokens[i].value);
+		printf("%d %d\t", line.tokens[i].type, line.tokens[i].value);
 	}
 	printf("\n");
 }
@@ -76,13 +76,28 @@ second_pass_token make_token(char *str) {
 
 	if (begins_with(str, 'O')) {
 		t.type = O;
-		t.value = atoi(substr(str, 1, strlen(str)));
+		char *rem = substr(str, 1, strlen(str));
+		if(strlen(rem) != 4) {
+			fprintf(stderr, "Invalid format of data.\n");
+			exit(EXIT_FAILURE);
+		}
+		t.value = atoi(rem);
 	} else if (begins_with(str, 'R')) {
 		t.type = R;
-		t.value = atoi(substr(str, 1, strlen(str)));
+		char *rem = substr(str, 1, strlen(str));
+		if(strlen(rem) != 4) {
+			fprintf(stderr, "Invalid format of data.\n");
+			exit(EXIT_FAILURE);
+		}
+		t.value = atoi(rem);
 	} else if (begins_with(str, 'S')) {
 		t.type = S;
-		int val = hex_to_dec(substr(str, 1, strlen(str))); // ? query about value following S, is it a decimal or hex value 
+		char *rem = substr(str, 1, strlen(str));
+		if(strlen(rem) != 4) {
+			fprintf(stderr, "Invalid format of data.\n");
+			exit(EXIT_FAILURE);
+		}
+		int val = hex_to_dec(rem); // ? query about value following S, is it a decimal or hex value 
 		if(val < 0 || val > 99) {
 			fprintf(stderr, "Symbol value range [00 - 99]\n");
 			exit(EXIT_FAILURE);
@@ -91,7 +106,12 @@ second_pass_token make_token(char *str) {
 		}
 	} else if (begins_with(str, 'L')) {
 		t.type = L;
-		int val = hex_to_dec(substr(str, 1, strlen(str)));
+		char *rem = substr(str, 1, strlen(str));
+		if(strlen(rem) != 4) {
+			fprintf(stderr, "Invalid format of data.\n");
+			exit(EXIT_FAILURE);
+		}
+		int val = hex_to_dec(rem);
 		if (val < 0 || val > 65535) {
 			fprintf(stderr, "Direct addressing value range [0000 - FFFF]\n");
 			exit(EXIT_FAILURE);
@@ -101,17 +121,34 @@ second_pass_token make_token(char *str) {
 	} else {
 		char *start = substr(str, 0, 2);
 		if(strcmp(start,"DB") == 0) {
-			t.type = DB; t.value = atoi(substr(str, 2, strlen(str)));
+			t.type = DB; 
+			char *rem = substr(str, 2, strlen(str));
+			if(strlen(rem) != 4) {
+				fprintf(stderr, "Invalid format of data.\n");
+				exit(EXIT_FAILURE);
+			}
+			t.value = atoi(rem);
 		} else if(strcmp(start,"DW") == 0) {
-			t.type = DW; t.value = atoi(substr(str, 2, strlen(str)));
+			t.type = DW;
+			char *rem = substr(str, 2, strlen(str));
+			if(strlen(rem) != 4) {
+				fprintf(stderr, "Invalid format of data.\n");
+				exit(EXIT_FAILURE);
+			}
+			t.value = atoi(rem);
 		} else if(strcmp(start,"DD") == 0) {
-			t.type = DD; t.value = atoi(substr(str, 2, strlen(str)));
+			t.type = DD;
+			char *rem = substr(str, 2, strlen(str));
+			if(strlen(rem) != 4) {
+				fprintf(stderr, "Invalid format of data.\n");
+				exit(EXIT_FAILURE);
+			}
+			t.value = atoi(rem);
 		} else {
 			fprintf(stderr, "Invalid token\n");
 			exit(EXIT_FAILURE);
 		}
-	}
-		
+	}		
 	return t;
 }
 

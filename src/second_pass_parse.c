@@ -55,19 +55,19 @@ line parse_intermediate_file(const char *filename) {
 
 }
 
-// int main(int argc, char **argv) {
-//     char *filename; FILE *fp;
-//     char *rest = NULL; char *token = NULL;
+int main(int argc, char **argv) {
+    char *filename; FILE *fp;
+    char *rest = NULL; char *token = NULL;
 
-//     second_pass_token *tokens = NULL; int num_tokens = 0;
+    second_pass_token *tokens = NULL; int num_tokens = 0;
 
-//     if (!argv[1]) {
-//         fprintf(stderr, "Usage: ./a.out filename: (char *)\n");
-//         exit(EXIT_FAILURE);
-//     } else
-//         filename = argv[1];
+    if (!argv[1]) {
+        fprintf(stderr, "Usage: ./a.out filename: (char *)\n");
+        exit(EXIT_FAILURE);
+    } else
+        filename = argv[1];
 
-//     line l = parse_intermeditate_file(filename);
-//     // print_line(l);
-//     return 0;
-// }
+    line l = parse_intermediate_file(filename);
+    print_line(l);
+    return 0;
+}
