@@ -37,7 +37,7 @@ void checkValidFileName(char* fileName)
 int validate(char ch)
 {
     if((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == ':') || (ch == ';') 
-                || (ch == '\n') || (ch == ' ') || (ch == '$') || (ch == '\'') || (ch ==',')
+                || (ch == '\n') || (ch == ' ') || (ch == '$') || (ch == '\'') || (ch ==',') || (ch == '"')
                 || (ch >= 'A' && ch <= 'Z') || (ch == '\t')
                 )
     {
@@ -56,16 +56,13 @@ void add_and_reset_lines(Token* temp, Line* line)
     //printLine(line);
 
     /*call here suvyan and aritra*/
-    //op_tab_node* op_tab = call_fucking_shuvyan(line);
-    //hello_aritra_samanta(op_tab);
+    //if(line->length > 0 && line->tokens[0].length > 0) validate_and_find(line);
 
     if (line->length > 0 && line->tokens[0].length > 0)
         validate_and_find(line);
 
     temp->length = 0;
     for(int k=0;k<10;k++) temp->word[k] = '\0';
-    // free(temp.word);
-    // temp.word = (char*)malloc(10*sizeof(char));
 
     for (int k=0;k<line->length;k++)
     {
@@ -89,7 +86,6 @@ void parse(char* fileName)
     Token temp;
     temp.length = 0;
     for(int k=0;k<10;k++) temp.word[k] = '\0';
-    //temp.word = (char*)malloc(10*sizeof(char));
     // initially 10 bytes of data allocated to temp.word
 
     Line currentLine;
@@ -133,11 +129,23 @@ void parse(char* fileName)
                         }
                         /* but if you get a newline or comment*/
                         /*add your current Token to Line and call fucking Shuvyan*/
-                        else if(ch == '\n' || ch == ';')
+                        else if(ch == '\n' )
                         {  
                             /*add the token to line*/ 
                             add_and_reset_lines(&temp, &currentLine);
                             break;
+                        }
+                        else if(ch == ';')
+                        {
+                            /*ignore untill you get a newline*/
+                            while(fread(&ch, sizeof(char), 1, fptr))
+                            {
+                                if(ch == '\n')
+                                {
+                                    fseek(fptr, -sizeof(char), SEEK_CUR);
+                                    break;
+                                }
+                            }
                         }
                         else
                         {
@@ -145,9 +153,21 @@ void parse(char* fileName)
                         }   
                     }
                 }
-                else if(ch == '\n' || ch == ';')
+                else if(ch == '\n')
                 {
                         add_and_reset_lines(&temp, &currentLine);
+                }
+                else if(ch == ';')
+                {
+                    /*ignore untill you get a newline*/
+                    while(fread(&ch, sizeof(char), 1, fptr))
+                    {
+                        if(ch == '\n')
+                        {
+                            fseek(fptr, -sizeof(char), SEEK_CUR);
+                            break;
+                        }
+                    }
                 }
             }
         }
