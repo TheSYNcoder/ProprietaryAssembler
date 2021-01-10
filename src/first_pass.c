@@ -11,8 +11,9 @@ int get_code_for_register( char *reg_name ){
     int len = strlen(reg_name) ;
     int i;
     for ( i= 0; i < len; i++ ){
-        reg_name[i] = toUpper(reg_name[i]);
+        reg_name[i] = toupper(reg_name[i]);
     }
+    
 
     if ( strcmp(reg_name, "AL") == 0 ){
         return 0;
@@ -129,7 +130,7 @@ void dfs(struct Trie *tmp, int *current_opcodes, int *size, op_tab_node **opcode
 
 op_tab_node **search(struct Trie *head, char *opcode, int *current_opcodes)
 {
-
+    // opcode is ADD
     if (head == NULL)
         return NULL;
 
@@ -142,11 +143,12 @@ op_tab_node **search(struct Trie *head, char *opcode, int *current_opcodes)
     int len = strlen(opcode);
 
     int i;
+    
     for (i = 0; i < len; i++)
     {
-        if (temp->character[indexTrie(toUpper(opcode[i]))] == NULL)
+        if (temp->character[indexTrie(toupper(opcode[i]))] == NULL)
         {
-            printf("Opcode not found");
+            printf("Opcode not found\n");
             return NULL;
         }
         temp = temp->character[indexTrie(opcode[i])];
@@ -206,7 +208,7 @@ char * upper_token( char *s ){
     char *ret  = strdup(s);
     
     for ( ; *ret; ret++)
-        *ret=toUpper(*ret);
+        *ret=toupper(*ret);
     return ret;
 }
 
@@ -314,7 +316,11 @@ void validate_and_find( Line*  line ){
     for ( i = 0; i < num_tokens ; i++ ){
         tokens[i]  = malloc( (line->tokens[i].length) * sizeof(char) );
         tokens[i] = line->tokens[i].word;
+        printf("%s ", line->tokens[i].word);
     }
+    printf("\n");
+
+
 
     op_tab_node* node = NULL;
     if(num_tokens == 0)
@@ -322,7 +328,11 @@ void validate_and_find( Line*  line ){
 
 
     FILE *fp;
-    fp = fopen("intermediate_file.txt", "w");
+    fp = fopen("intermediate_file.txt", "a");
+    if ( fp == NULL){
+        printf("File cannot be opened\n");
+        exit(0);
+    }
     
     char *identifier, buffer[4];
     if (tokens[0][strlen(tokens[0]) - 1] == ':')
@@ -333,6 +343,7 @@ void validate_and_find( Line*  line ){
     if(!(strcmp(tokens[start_token], "DB") && strcmp(tokens[start_token], "DW") && strcmp(tokens[start_token], "DQ")))
     {
     	fprintf(fp, "%s", tokens[start_token]);
+    	printf("%s", tokens[start_token]);
     	for(i = 0; i < 4 - strlen(tokens[start_token]); i++)
     		fprintf(fp, "%c", '0');
     	fprintf(fp, "%s\n", tokens[start_token + 1]);
@@ -346,14 +357,20 @@ void validate_and_find( Line*  line ){
 
 	    // check in opcode trie
 	    op_tab_node ** opcodes = search( head, opcode, &num_opcodes);
+        printf("%d\n" , num_opcodes);
+        
 
-	    if(opcodes == NULL || num_opcodes == 0)
+
+	    if(opcodes == NULL || num_opcodes == 0){
+            printf("Error no opcodes %d\n" , __LINE__);
 	        return ;
+        }
 
 	    for(i = 0; i < num_opcodes ; i++)
 	    {
-	        if (strcmp(opcode , opcodes[i]->opcode))
-	            continue;
+            flag =1;
+	        // if (strcmp(opcode , opcodes[i]->opcode))
+	        //     continue;
 
 	        char *add_mode = opcodes[i]->add_mode;
 	        char *modes[2];
@@ -369,26 +386,44 @@ void validate_and_find( Line*  line ){
 	            modes[c++] = s;
 	        }
 
-	        if(num_tokens - current_token < c)
-	            return ;
+             
 
-	        for(j = 0; j < c; j++)
+	        if(num_tokens - current_token < c){
+                printf("Wrong syntax %d\n" , __LINE__ );
+	            return ;
+            }
+
+            
+
+	        for(j = 0; j < c; j++){
+                printf("%s %s\n" , modes[j] , tokens[current_token+j]);
 	            if(!check_reg_var_pair(modes[j], tokens[current_token+j]))
 	                flag=0;
+            }
 
-            current_lc += opcodes[temp]->length;
+            
 
             if(flag)
 	            break;
             
 	    }
+        printf("%d %d\n" , i , __LINE__);
 	    temp = i;
+        printf("%d %d %d %d\n" ,num_tokens, num_opcodes , temp , __LINE__ );
 	    if(temp != num_opcodes)
 	    {
-	    	fprintf(fp, "O");
-	    	for(i = 0; i < 4 - strlen(opcodes[temp]->opcode); i++)
-    			fprintf(fp, "%c", '0');
-    		fprintf(fp, "%s ", opcodes[temp]->opcode);
+            
+	    	// fprintf(fp, "%s", "0");
+	    	printf("O\n");
+            int len = strlen( opcodes[temp]->opcode );
+
+            
+	    	// for(i = 0; i < 5 - len; i++)
+    		// 	fprintf(fp, "%c", '0');
+            printf("%d\n" , __LINE__);
+            printf("%s ", opcodes[temp]->opcode);
+            fprintf(fp, "%s ", opcodes[temp]->opcode);
+
 
 	    	for(i = start_token + 1; i < num_tokens; i++)
 	    	{
@@ -412,8 +447,9 @@ void validate_and_find( Line*  line ){
 	    		else
 	    			fprintf(fp, "\n");
 	    	}
-            
-	    }
+            current_lc += opcodes[temp]->length;
+        }
     }
+
     fclose(fp);
 }

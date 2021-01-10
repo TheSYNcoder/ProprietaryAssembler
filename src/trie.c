@@ -77,7 +77,7 @@ void insert(struct Trie *head, char *str, op_tab_node *n)
 
 
 
-op_tab_node *search(struct Trie *head, char *str)
+op_tab_node *def_search(struct Trie *head, char *str)
 {
     //basic trie search
     if (head == NULL)
@@ -92,6 +92,7 @@ op_tab_node *search(struct Trie *head, char *str)
 
         str++;
     }
+    return curr->pointer;
 
 
 }
@@ -101,30 +102,44 @@ struct Trie *makeTrie(int col, char *filename)
     
     head = getNewTrieNode();
     FILE *file = fopen(filename, "r");
+    if ( file == NULL ){
+        printf("File not found\n");
+        exit(0);
+    }
     char line[100];
     int i = 0;
     while (fgets(line, 100, file))
     {
         //parses csv line by line
         int j = 0;
-        const char *tok;
+        char *tok;
         op_tab_node* new_node = (op_tab_node*)malloc(sizeof(op_tab_node));
+        if ( new_node == NULL){
+            printf("Malloc failed\n");
+        }
+        // printf("2\n");
         new_node->sl_no = i;
         char *tmp = strdup(line);
         tok = strtok(line, ",");// tok is the first token
+        
         while (tok != NULL)
         {
+            
             if (j == 0)
             {//first column element
-                strcpy(new_node->symbol, tok);
+                // strcpy(new_node->symbol, tok);
+                new_node->symbol = tok;
             }
             else if (j == 1)
             {//second column element
-                strcpy(new_node->opcode, tok);
+                // strcpy(new_node->opcode, tok);
+                new_node->opcode= tok;
+                
             }
             else if (j == 2)
             {//third column element
-                strcpy(new_node->add_mode, tok);
+                // strcpy(new_node->add_mode, tok);
+                new_node->add_mode= tok;
             }
             else if (j == 3)
             {//fourth column element
@@ -134,13 +149,17 @@ struct Trie *makeTrie(int col, char *filename)
             {//breaks because no more columns 
                 break;
             }
+            // printf("148\n");
             tok = strtok(NULL, ",");//updates tok to the next token
+            // printf("150\n");
             j++;
         }
+
+
         char key[30] = "";//creates a key which is opcode+addressing mode
-        strcat(key, new_node->opcode);
+        strcat(key, new_node->symbol);
         strcat(key, new_node->add_mode);
-        //printf("%s\n", key);
+        // printf("%s\n", key);
         insert(head, key, new_node);//inserts into trie
         //char newkey[30] = "PORT[DX]; AL"
        

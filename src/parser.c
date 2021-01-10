@@ -1,7 +1,4 @@
 
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
 #include "parser.h"
 
 
@@ -63,7 +60,7 @@ void add_and_reset_lines(Token* temp, Line* line)
     //hello_aritra_samanta(op_tab);
 
     if (line->length > 0 && line->tokens[0].length > 0)
-        find_and_validate(line);
+        validate_and_find(line);
 
     temp->length = 0;
     for(int k=0;k<10;k++) temp->word[k] = '\0';

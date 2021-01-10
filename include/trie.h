@@ -14,8 +14,9 @@ struct Trie
     struct Trie *character[CHAR_SIZE];
 };
 
-extern struct Trie *head;
-extern struct Trie *makeTrie(int col, char *filename);
+struct Trie *head;
+struct Trie *makeTrie(int col, char *filename);
+op_tab_node *def_search(struct Trie *head, char *str);
 
 #endif
 

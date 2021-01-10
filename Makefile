@@ -19,7 +19,7 @@ $(info    OBJECTS is $(OBJECTS))
 pasm : $(OBJECTS) 
 	$(CC) -o $@ $^ $(CFLAGS)
 
-.PHONY: clean
+
 
 # ~ means to ignore all the warings if file is not present
 
@@ -39,7 +39,9 @@ ld:	src/ld_lib.c include/ld_lib.h ld.c
 %.exe:
 	od -t x1 -A n $@
 
+.PHONY: clean
 
 clean:
 	rm -rf $(ODIR)
+	rm pasm
 	# rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
