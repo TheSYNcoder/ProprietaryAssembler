@@ -1,6 +1,6 @@
 #include "main.h"
 #include "trie.h"
-#include <string.h>
+#include "parser.h"
 
 
 
@@ -303,17 +303,27 @@ int check_reg_var_pair( char * operand, char *token ){
     return 1;
 }
 
-void validate_and_find( char **tokens , int num_tokens ){
+void validate_and_find( Line*  line ){
 
-    struct Trie * head;
+    // char **tokens , int num_tokens
+    // 
+    // line->token[0]->word
+    int num_tokens = line->length;
+    char **tokens = malloc( num_tokens * sizeof(char *));
+    int i, j, flag = 1, start_token = 0, temp, current_token = 0;
+    for ( i = 0; i < num_tokens ; i++ ){
+        tokens[i]  = malloc( (line->tokens[i].length) * sizeof(char) );
+        tokens[i] = line->tokens[i].word;
+    }
+
     op_tab_node* node = NULL;
     if(num_tokens == 0)
-        return NULL;
+        return;
 
 
     FILE *fp;
     fp = fopen("intermediate_file.txt", "w");
-    int i, j, flag = 1, start_token = 0, temp, current_token = 0;
+    
     char *identifier, buffer[4];
     if (tokens[0][strlen(tokens[0]) - 1] == ':')
     {
@@ -338,7 +348,7 @@ void validate_and_find( char **tokens , int num_tokens ){
 	    op_tab_node ** opcodes = search( head, opcode, &num_opcodes);
 
 	    if(opcodes == NULL || num_opcodes == 0)
-	        return NULL;
+	        return ;
 
 	    for(i = 0; i < num_opcodes ; i++)
 	    {
@@ -360,14 +370,17 @@ void validate_and_find( char **tokens , int num_tokens ){
 	        }
 
 	        if(num_tokens - current_token < c)
-	            return NULL;
+	            return ;
 
 	        for(j = 0; j < c; j++)
 	            if(!check_reg_var_pair(modes[j], tokens[current_token+j]))
 	                flag=0;
 
-	        if(flag)
+            current_lc += opcodes[temp]->length;
+
+            if(flag)
 	            break;
+            
 	    }
 	    temp = i;
 	    if(temp != num_opcodes)
@@ -399,7 +412,7 @@ void validate_and_find( char **tokens , int num_tokens ){
 	    		else
 	    			fprintf(fp, "\n");
 	    	}
-            current_lc += opcodes[temp].length;
+            
 	    }
     }
     fclose(fp);

@@ -2,8 +2,8 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include "main.h"
 #include "parser.h"
+
 
 /*check if the filename and the file extension is correct*/
 void checkValidFileName(char* fileName)
@@ -50,7 +50,7 @@ int validate(char ch)
     {
         return 0;
     }
-   
+} 
 void add_and_reset_lines(Token* temp, Line* line)
 {
     line->tokens[line->length] = *temp;
@@ -61,6 +61,11 @@ void add_and_reset_lines(Token* temp, Line* line)
     /*call here suvyan and aritra*/
     //op_tab_node* op_tab = call_fucking_shuvyan(line);
     //hello_aritra_samanta(op_tab);
+
+    find_and_validate( line );
+
+
+
 
     temp->length = 0;
     for(int k=0;k<10;k++) temp->word[k] = '\0';

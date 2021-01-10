@@ -1,12 +1,25 @@
 #include "main.h"
+#include "trie.h"
+#include "parser.h"
 
 
-int32_t main(){
-    op_tab_node node;
-    node.sl_no= 1;
-    node.length = 3;
-    strcpy(node.opcode,"ADD");
-    strcpy(node.add_mode,"something");
+int32_t main(int argc , char *argv[]){
 
-    printf("%s", node.opcode);
+
+    if ( argc < 2) {
+        printf("Filename not entered\n");
+        return 0;
+    }
+    if ( argc > 2){
+        printf("Usage : pasm <filename.asm>\n");
+        return 0;
+    }
+    // parse the opcodes
+    head = makeTrie( 4, "../opcodes.csv");
+
+    // write to intermediate file
+    parse(argv[1]);
+    
+
+
 }
