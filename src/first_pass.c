@@ -95,7 +95,7 @@ int symtable_function(char *token, int define)
     }
     if(define)
     {
-    	if(!node.defined)
+    	if(!symbol_table[pos].defined)
     	{
     		symbol_table[pos].defined = 1;
         	symbol_table[pos].LC = current_lc;
@@ -303,7 +303,7 @@ int check_reg_var_pair( char * operand, char *token ){
     return 1;
 }
 
-op_tab_node* validate_and_find( char **tokens , int num_tokens ){
+void validate_and_find( char **tokens , int num_tokens ){
 
     struct Trie * head;
     op_tab_node* node = NULL;
@@ -313,11 +313,12 @@ op_tab_node* validate_and_find( char **tokens , int num_tokens ){
 
     FILE *fp;
     fp = fopen("intermediate_file.txt", "w");
-    int i, j, flag = 1, start_token = 0, temp;
+    int i, j, flag = 1, start_token = 0, temp, current_token = 0;
     char *identifier, buffer[4];
     if (tokens[0][strlen(tokens[0]) - 1] == ':')
     {
     	start_token++;
+        current_lc += 1;
     }
     if(!(strcmp(tokens[start_token], "DB") && strcmp(tokens[start_token], "DW") && strcmp(tokens[start_token], "DQ")))
     {
@@ -381,8 +382,13 @@ op_tab_node* validate_and_find( char **tokens , int num_tokens ){
 	    		int reg_code = get_code_for_register(tokens[i]);
 	    		if(reg_code == -1)
 	    		{
-	    			temp = symtable_function(tokens[i], 0);
-	    			fprintf(fp, "%s%04d", "S", num_symbols);
+                    if(!check_number(tokens[i]))
+                        fprintf(fp, "%s", tokens[i]);
+                    else
+                    {
+    	    			temp = symtable_function(tokens[i], 0);
+    	    			fprintf(fp, "%s%04d", "S", num_symbols);
+                    }
 	    		}
 	    		else
 	    		{
@@ -393,6 +399,7 @@ op_tab_node* validate_and_find( char **tokens , int num_tokens ){
 	    		else
 	    			fprintf(fp, "\n");
 	    	}
+            current_lc += opcodes[temp].length;
 	    }
     }
     fclose(fp);
