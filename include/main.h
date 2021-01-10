@@ -6,7 +6,7 @@
 /*
 Necessary structs defined here
 */
-#define ASSEMBLY_FILE_EXTENSION ".as"
+#define ASSEMBLY_FILE_EXTENSION ".pasm"
 
 typedef struct op_tab_node{
 
@@ -19,13 +19,17 @@ typedef struct op_tab_node{
 }op_tab_node;
 
 
-/*parser uses this node and returns an array of Tokens*/
 typedef struct Token
 {
-    /* data */
-    int32_t type; /*type of the token*/
-    char* word;/*contains the actual word*/
+    int length; // how many character in the word
+    char word[10]; // actual opcode or operand
 }Token;
+
+typedef struct Line
+{
+    int length; // how many Token exists in a line
+    Token tokens[3];
+}Line;
 
 
 #endif
