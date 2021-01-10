@@ -107,19 +107,19 @@ int symtable_function(char *token, int define)
     return 0;
 }
 
-void dfs(struct Trie *tmp, int *current_opcodes, int *size, op_tab_node **opcodes)
+void dfs(struct Trie *tmp, int *current_opcodes, int *size, op_tab_node ***opcodes)
 {
     if (tmp == NULL)
         return;
 
     if (tmp->isLeaf)
     {
-        opcodes[*current_opcodes] = (tmp->pointer);
+        *opcodes[*current_opcodes] = (tmp->pointer);
         *current_opcodes = *current_opcodes + 1;
         if (*current_opcodes == *size)
         {
             *size = *size + 10;
-            opcodes = (op_tab_node **)realloc(opcodes, (*size) * (sizeof( op_tab_node *) ));
+            *opcodes = (op_tab_node **)realloc(*opcodes, (*size) * (sizeof( op_tab_node *) ));
         }
     }
 
@@ -154,8 +154,8 @@ op_tab_node **search(struct Trie *head, char *opcode, int *current_opcodes)
         temp = temp->character[indexTrie(opcode[i])];
     }
 
-    dfs(temp, current_opcodes, &size_optabs, opcode_tabs);
-    opcode_tabs = (op_tab_node **) realloc(opcode_tabs , (*current_opcodes) * sizeof(op_tab_node *));
+    dfs(temp, current_opcodes, &size_optabs, &opcode_tabs);
+    // opcode_tabs = (op_tab_node **) realloc(opcode_tabs , (*current_opcodes) * sizeof(op_tab_node *));
 
     return opcode_tabs;
 }
@@ -316,7 +316,7 @@ void validate_and_find( Line*  line ){
     for ( i = 0; i < num_tokens ; i++ ){
         tokens[i]  = malloc( (line->tokens[i].length) * sizeof(char) );
         tokens[i] = line->tokens[i].word;
-        printf("%s ", line->tokens[i].word);
+        printf("%s ", tokens[i]);
     }
     printf("\n");
 
@@ -358,6 +358,16 @@ void validate_and_find( Line*  line ){
 	    // check in opcode trie
 	    op_tab_node ** opcodes = search( head, opcode, &num_opcodes);
         printf("%d\n" , num_opcodes);
+
+        printf("%s\n" , opcode);
+        for ( i =0 ; i < num_opcodes ; i++ ){
+            printf("%s ", opcodes[i]->add_mode);
+            printf("%s ", opcodes[i]->opcode);
+            printf("%s ", opcodes[i]->symbol);
+            printf("%d ", opcodes[i]->sl_no);
+            printf("%d \n", opcodes[i]->length);
+        }
+        printf("\n");
         
 
 

@@ -120,7 +120,8 @@ struct Trie *makeTrie(int col, char *filename)
         // printf("2\n");
         new_node->sl_no = i;
         char *tmp = strdup(line);
-        tok = strtok(line, ",");// tok is the first token
+        char *rnd;
+        tok = strtok_r(line, ",", &rnd);// tok is the first token
         
         while (tok != NULL)
         {
@@ -150,7 +151,7 @@ struct Trie *makeTrie(int col, char *filename)
                 break;
             }
             // printf("148\n");
-            tok = strtok(NULL, ",");//updates tok to the next token
+            tok = strtok_r(NULL, ",", &rnd);//updates tok to the next token
             // printf("150\n");
             j++;
         }
