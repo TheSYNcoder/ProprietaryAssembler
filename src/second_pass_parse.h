@@ -114,3 +114,14 @@ second_pass_token make_token(char *str) {
 		
 	return t;
 }
+
+/*
+ * Replace main in second_pass_parse.c with this function
+ * args : const char *filename
+ * returns: line (all tokens for the file, not line wise)
+ */
+line parse_intermeditate_file(const char *filename)
+{
+	line res;
+	return res;
+}
