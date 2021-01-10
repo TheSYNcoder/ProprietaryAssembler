@@ -103,6 +103,7 @@ int symtable_function(char *token, int define)
     for (pos = 0; pos < num_symbols; pos++)
         if (strcmp(token, symbol_table[pos].label) == 0)
             break;
+    printf("%s , %d , %d\n" , token , num_symbols, __LINE__);
     if (pos == num_symbols)
     {
         sym_tab_node node;
@@ -112,8 +113,10 @@ int symtable_function(char *token, int define)
         symbol_table[num_symbols++] = node;
         pos = num_symbols - 1;
     }
+    
     if (define)
     {
+        printf("%s , %d , %d\n", token, num_symbols, __LINE__);
         if (!symbol_table[pos].defined)
         {
             symbol_table[pos].defined = 1;
@@ -202,11 +205,12 @@ int check_number(char *s)
 
     for (; *s; s++)
     {
-        if (isdigit(*s))
+        if (isxdigit(*s))
             num_digs++;
         else
             num_chars++;
     }
+
     if (num_chars <= 1)
     {
         if (num_chars == 0)
@@ -361,6 +365,7 @@ void validate_and_find(Line *line)
     int num_tokens = line->length;
     char **tokens = malloc(num_tokens * sizeof(char *));
     int i, j, flag = 1, start_token = 0, temp, current_token = 0;
+    
     for (i = 0; i < num_tokens; i++)
     {
         tokens[i] = malloc((line->tokens[i].length) * sizeof(char));
@@ -387,14 +392,24 @@ void validate_and_find(Line *line)
         start_token++;
         current_lc += 1;
     }
+
+    
+
     if (!(strcmp(tokens[start_token], "DB") && strcmp(tokens[start_token], "DW") && strcmp(tokens[start_token], "DQ")))
     {
+        
         fprintf(fp, "%s", tokens[start_token]);
-        printf("%s", tokens[start_token]);
-        for (i = 0; i < 4 - strlen(tokens[start_token]); i++)
-            fprintf(fp, "%c", '0');
+        int len = 4 - strlen(tokens[start_token+1]);
+        
+        for (i = 0; i < len; i++)
+            fprintf(fp, "%s", "0");
         fprintf(fp, "%s\n", tokens[start_token + 1]);
-        temp = symtable_function(identifier, 1);
+        // temp = symtable_function(identifier, 1);
+        char *identifier = malloc(sizeof(char) * strlen(tokens[0]));
+        for ( i =0; i < strlen(tokens[0]) -1; i++ )
+            identifier[i] = tokens[i];
+        identifier[strlen(tokens[0])-1] ='\0';
+        temp = symtable_function(identifier , 1);
     }
     else
     {
@@ -458,17 +473,25 @@ void validate_and_find(Line *line)
                 fprintf(fp, "%c", '0');
 
             fprintf(fp, "%s ", opcodes[temp]->opcode);
+            
+            printf("%d %d %d\n" , start_token , num_tokens , __LINE__);
+            char reg[10]="ax";
+            printf("%d %d\n" , get_code_for_register(reg)  , __LINE__ );
 
-            for (i = start_token + 1; i < num_tokens; i++)
+            for (i = start_token ; i < num_tokens; i++)
             {
+                printf("%s %d\n" , tokens[i] , __LINE__);
                 int reg_code = get_code_for_register(tokens[i]);
+                printf("%d\n" , reg_code);
                 if (reg_code == -1)
                 {
-                    if (!check_number(tokens[i]))
+                    if (check_number(tokens[i]))
                         fprintf(fp, "%s", tokens[i]);
                     else
                     {
+                        printf("%d %s %d\n", num_symbols, tokens[i], __LINE__);
                         temp = symtable_function(tokens[i], 0);
+                        printf("%d\n" , num_symbols);
                         fprintf(fp, "%s%04d", "S", num_symbols);
                     }
                 }

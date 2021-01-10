@@ -3,4 +3,7 @@ MOV AH 09H
 INT 21H
 MOV AH 4CH
 INT 21H
+MOV AX str 
 string: DB 10
+str: DB 5
+
