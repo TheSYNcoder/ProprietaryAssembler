@@ -62,10 +62,8 @@ void add_and_reset_lines(Token* temp, Line* line)
     //op_tab_node* op_tab = call_fucking_shuvyan(line);
     //hello_aritra_samanta(op_tab);
 
-    find_and_validate( line );
-
-
-
+    if (line->length > 0 && line->tokens[0].length > 0)
+        find_and_validate(line);
 
     temp->length = 0;
     for(int k=0;k<10;k++) temp->word[k] = '\0';

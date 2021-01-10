@@ -386,9 +386,9 @@ void validate_and_find( Line*  line ){
 	    if(temp != num_opcodes)
 	    {
 	    	fprintf(fp, "O");
-	    	for(i = 0; i < 4 - strlen(opcodes[temp]); i++)
+	    	for(i = 0; i < 4 - strlen(opcodes[temp]->opcode); i++)
     			fprintf(fp, "%c", '0');
-    		fprintf(fp, "%s ", opcodes[temp]);
+    		fprintf(fp, "%s ", opcodes[temp]->opcode);
 
 	    	for(i = start_token + 1; i < num_tokens; i++)
 	    	{
