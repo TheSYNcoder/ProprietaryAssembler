@@ -12,6 +12,8 @@ struct Trie *getNewTrieNode()
     node->pointer = NULL;
     return node;
 }
+
+
 int indexTrie(char ch)
 {
     //returns index of a character in the character array in trie
@@ -73,6 +75,8 @@ void insert(struct Trie *head, char *str, op_tab_node *n)
     curr->pointer = n;
 }
 
+
+
 op_tab_node *search(struct Trie *head, char *str)
 {
     //basic trie search
@@ -89,13 +93,12 @@ op_tab_node *search(struct Trie *head, char *str)
         str++;
     }
 
-    return curr->pointer;
-}
+
 
 struct Trie *makeTrie(int col, char *filename)
 {
-    //printf("hi");
-    struct Trie *head = getNewTrieNode();
+    
+    head = getNewTrieNode();
     FILE *file = fopen(filename, "r");
     char line[100];
     int i = 0;
@@ -146,6 +149,9 @@ struct Trie *makeTrie(int col, char *filename)
     return head;//returns head of the trie
 }
 
+
+
+
 int main(int argc, char const *argv[])
 {
     //struct Trie *tree = makeTrie(134, 4, "input3");
@@ -170,3 +176,5 @@ int main(int argc, char const *argv[])
     }
   
 }
+
+
