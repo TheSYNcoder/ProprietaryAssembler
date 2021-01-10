@@ -1,9 +1,11 @@
 MOV DX string
+MOV DX string
 MOV AH 09H
 INT 21H
 MOV AH 4CH
 INT 21H
-MOV AX str 
+MOV AX label 
 string: DB 10
-str: DB 5
+label: DB "hello"
+
 
