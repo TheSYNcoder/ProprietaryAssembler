@@ -1,4 +1,4 @@
-#include "trie.h"
+#include <trie.h>
 
 struct Trie *getNewTrieNode()
 {
@@ -131,14 +131,14 @@ struct Trie *makeTrie(int col, char *filename)
                 new_node->symbol = buff;
             }
             else if (j == 1)
-            {   //second column element
+            { //second column element
                 // strcpy(new_node->opcode, tok);
                 char *buff = malloc(30);
-                strcpy(buff, tok+1);
+                strcpy(buff, tok + 1);
                 new_node->opcode = buff;
             }
             else if (j == 2)
-            {   //third column element
+            { //third column element
                 // strcpy(new_node->add_mode, tok);
                 char *buff = malloc(30);
                 strcpy(buff, tok);
@@ -170,28 +170,3 @@ struct Trie *makeTrie(int col, char *filename)
     }
     return head; //returns head of the trie
 }
-
-// int main(int argc, char const *argv[])
-// {
-//     //struct Trie *tree = makeTrie(134, 4, "input3");
-//     /*if(argc < 3){
-//         printf("Please specify the CSV file as an input\n");
-//         exit(0);
-//     }
-
-//     int row = atoi(argv[1]);
-//     int col = atoi(argv[2]);
-//     char fname[256];
-//     strcpy(fname, argv[3]);
-
-//     struct Trie* tree = makeTrie(row, col, fname);
-//     */
-
-//    //how to use
-//    struct Trie* tree = makeTrie(4, "../opcodes.csv");
-//     op_tab_node* n = search(tree, "$C216BIT POP");
-//     if(n != NULL){
-//         printf("%s %s %s %d\n", n->symbol, n->opcode, n->add_mode, n->length);
-//     }
-
-// }

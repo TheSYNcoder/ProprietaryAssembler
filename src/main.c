@@ -1,6 +1,7 @@
-#include "main.h"
-#include "trie.h"
-#include "parser.h"
+#include <main.h>
+#include <trie.h>
+#include <parser.h>
+#include <object_code.h>
 
 int main(int argc, char *argv[])
 {

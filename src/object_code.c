@@ -1,22 +1,5 @@
 #include <object_code.h>
 
-// #ifndef SECOND_PASS_PARSE_H
-// line parse_intermediate_file(const char *filename)
-// {
-//     int N = 6;
-//     line res;
-//     res.len = N;
-//     res.tokens = (second_pass_token *)malloc(N * sizeof(sizeof(second_pass_token)));
-//     res.tokens[0].type = O, res.tokens[0].value = 0x80;
-//     res.tokens[1].type = R, res.tokens[1].value = 0x01;
-//     res.tokens[2].type = S, res.tokens[2].value = 0;
-//     res.tokens[3].type = O, res.tokens[3].value = 0x83;
-//     res.tokens[4].type = L, res.tokens[4].value = 0x1234;
-//     res.tokens[5].type = DW, res.tokens[5].value = 0x13;
-//     return res;
-// }
-// #endif
-
 // 1 MiB
 #define BUFFER_SIZE (1024 * 1024)
 int write_object_file(const char *object_file, line tokens_array)
@@ -34,13 +17,14 @@ int write_object_file(const char *object_file, line tokens_array)
     modification_record modification_buffer[1024] = {0};
     int ptr = 0;
     int mod_ptr = 0;
-
+    byte last_code = 0x00;
     for (int i = 0; i < n; i++)
     {
         second_pass_token token = tokens_array.tokens[i];
+
         switch (token.type)
         {
-            byte last_code = 0x00;
+
             byte res_b;
             word res_w, symbol_address;
             double_word res_d;

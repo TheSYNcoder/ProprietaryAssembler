@@ -1,4 +1,4 @@
-#include "second_pass_parse.h"
+#include <second_pass_parse.h>
 
 void print_line(line line)
 {
@@ -246,26 +246,3 @@ line parse_intermediate_file(const char *filename)
 
     return line;
 }
-
-// int main(int argc, char **argv)
-// {
-//     char *filename;
-//     FILE *fp;
-//     char *rest = NULL;
-//     char *token = NULL;
-
-//     second_pass_token *tokens = NULL;
-//     int num_tokens = 0;
-
-//     if (!argv[1])
-//     {
-//         fprintf(stderr, "Usage: ./a.out filename: (char *)\n");
-//         exit(EXIT_FAILURE);
-//     }
-//     else
-//         filename = argv[1];
-
-//     line l = parse_intermediate_file(filename);
-//     print_line(l);
-//     return 0;
-// }

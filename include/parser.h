@@ -1,6 +1,6 @@
 #ifndef PARSER_H
 #define PARSER_H
-#include "main.h"
+#include <main.h>
 
 typedef struct Token
 {
@@ -15,5 +15,6 @@ typedef struct Line
 } Line;
 
 void parse(char *);
+extern void validate_and_find(Line *);
 
 #endif

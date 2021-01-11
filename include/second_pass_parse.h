@@ -13,20 +13,28 @@
 	DW
 	DD
 */
-enum TOKEN_TYPES {
-	O, R, S, L, DB, DW, DD
+enum TOKEN_TYPES
+{
+	O,
+	R,
+	S,
+	L,
+	DB,
+	DW,
+	DD
 } TOKEN_TYPES;
 
-typedef struct token {
+typedef struct token
+{
 	int type;
 	int value; // value in decimal
 } second_pass_token;
 
-typedef struct l {
+typedef struct l
+{
 	int len;
 	second_pass_token *tokens;
 } line;
-
 
 /*
  * Replace main in second_pass_parse.c with this function

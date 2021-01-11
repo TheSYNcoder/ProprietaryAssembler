@@ -1,6 +1,4 @@
-#include "main.h"
-#include "trie.h"
-#include "parser.h"
+#include <first_pass.h>
 
 int get_code_for_register(char *reg_name)
 {
@@ -443,12 +441,12 @@ void validate_and_find(Line *line)
             fprintf(fp, "%s\n", tokens[start_token + 1]);
             // temp = symtable_function(identifier, 1);
         }
-            char *identifier = malloc(sizeof(char) * strlen(tokens[0]));
-            for (i = 0; i < strlen(tokens[0]) - 1; i++)
-                identifier[i] = tokens[0][i];
-            identifier[strlen(tokens[0]) - 1] = '\0';
-            identifier = upper_token(identifier);
-            temp = symtable_function(identifier, 1);
+        char *identifier = malloc(sizeof(char) * strlen(tokens[0]));
+        for (i = 0; i < strlen(tokens[0]) - 1; i++)
+            identifier[i] = tokens[0][i];
+        identifier[strlen(tokens[0]) - 1] = '\0';
+        identifier = upper_token(identifier);
+        temp = symtable_function(identifier, 1);
 
         if (strcmp(tokens[start_token], "DB") == 0)
         {
